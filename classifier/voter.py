@@ -15,16 +15,10 @@ class Voter:
         for rank, pairs in enumerate(zip(*[
             [(category, item) for item in items] for category, items in self._category_to_items.items()
         ]), start=1):
-            early_stopping = False
             for category, item in pairs:
                 match = re.search(fr"\b{item}\b", text, re.IGNORECASE)
                 if match:
                     return category, rank
-                    early_stopping = True
-                    break
-
-            if early_stopping:
-                break
 
         return self._default_category, self._default_rank
         
