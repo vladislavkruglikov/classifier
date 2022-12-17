@@ -2,7 +2,7 @@ import re
 import nltk
 import string
 
-from typing import List
+from typing import List, Set
 from classifier.constants import RU_CHARS_LOWER
 from nltk.stem.snowball import RussianStemmer, EnglishStemmer
 
@@ -25,7 +25,8 @@ class Preprocessor:
             "o": "о",
             "c": "с",
             "a": "а",
-            "k": "к"
+            "k": "к",
+            "f1": "ф1"
         }
         self._black_list = black_list
         self._ru_stemmer = RussianStemmer()
@@ -52,6 +53,12 @@ class Preprocessor:
             text = text.replace(char, replacement)
         return text
 
+    def _text_contains_only_vocab(self, text: str, vocab: Set) -> bool:
+        for char in text:
+            if char not in vocab:
+                return False
+        return True
+
     def _preprocess(self, text: str) -> str:
         text = text.lower()
 
@@ -74,6 +81,13 @@ class Preprocessor:
 
         if self._remove_single_letter_token:
             tokens = [token for token in tokens if len(token) > 1]
+
+        # remove tokens such as 2,/323
+        tokens = [token for token in tokens if not self._text_contains_only_vocab(token, vocab=self._special_symbols + string.digits)]
+
+        # Th,.is, выа is,. A te34d,fst! -> This выа is A te34dfst
+        # need to keep digits for such cases as f1
+        tokens = [token.translate(str.maketrans('', '', self._special_symbols)) for token in tokens]
 
         text = " ".join(tokens)
 
