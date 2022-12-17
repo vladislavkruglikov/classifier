@@ -1,3 +1,4 @@
+import re
 import nltk
 import string
 
@@ -10,7 +11,7 @@ nltk.download('stopwords')
 
 
 class Preprocessor:
-    def __init__(self, do_stem: bool = False, remove_stop_words: bool = False) -> None:
+    def __init__(self, do_stem: bool = False, remove_stop_words: bool = False, black_list: str = None) -> None:
         self._do_stem = do_stem
         self._version = "0.0.3"
         self._char_mapping = {
@@ -20,6 +21,7 @@ class Preprocessor:
             "c": "с",
             "a": "а",
         }
+        self._black_list = black_list
         self._ru_stemmer = RussianStemmer()
         self._en_stemmer = EnglishStemmer()
         self._remove_stop_words = remove_stop_words
@@ -56,6 +58,9 @@ class Preprocessor:
 
         if self._do_stem:
             tokens = [self._stem(token) for token in tokens]
+
+        if self._black_list:
+            tokens = [token for token in tokens if not re.search(self._black_list, token)]
 
         text = " ".join(tokens)
 
