@@ -1,5 +1,4 @@
 import re
-import pandas as pd
 
 from tqdm import tqdm
 from typing import Tuple, List, Dict
@@ -22,10 +21,8 @@ class Voter:
 
         return self._default_category, self._default_rank
         
-    def vote(self, df: pd.DataFrame):
-        results = [self._vote(text) for text in tqdm(df.text)]
+    def vote(self, texts: List[str]) -> Tuple[List[str], List[int]]:
+        results = [self._vote(text) for text in tqdm(texts)]
         ranks = [result[1] for result in results]
         categories = [result[0] for result in results]
-        df["category_predicted"] = categories
-        df["category_predicted_rank"] = ranks
-        return df
+        return categories, ranks
