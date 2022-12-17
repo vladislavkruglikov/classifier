@@ -25,13 +25,14 @@ class Preprocessor:
             "o": "о",
             "c": "с",
             "a": "а",
+            "k": "к"
         }
         self._black_list = black_list
         self._ru_stemmer = RussianStemmer()
         self._en_stemmer = EnglishStemmer()
         self._max_token_length = max_token_length
         self._remove_stop_words = remove_stop_words
-        self._special_symbols = string.punctuation + "-–"
+        self._special_symbols = string.punctuation + "-–’"
         self._remove_single_letter_token= remove_single_letter_token
         self._stopwords = set(nltk.corpus.stopwords.words(["russian", "english"]))
 
