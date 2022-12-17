@@ -10,8 +10,8 @@ nltk.download('stopwords')
 
 
 class Preprocessor:
-    def __init__(self, remove_stop_words: bool = False) -> None:
-        self._stem = stem
+    def __init__(self, do_stem: bool = False, remove_stop_words: bool = False) -> None:
+        self._do_stem = do_stem
         self._version = "0.0.3"
         self._char_mapping = {
             "e": "е",
@@ -53,6 +53,9 @@ class Preprocessor:
 
         if self._remove_stop_words:
             tokens = [token for token in tokens if token not in self._stopwords]
+
+        if self._do_stem:
+            tokens = [self._stem(token) for token in tokens]
 
         text = " ".join(tokens)
 
