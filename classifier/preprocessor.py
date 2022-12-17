@@ -15,9 +15,10 @@ class Preprocessor:
                 do_stem: bool = False,
                 remove_stop_words: bool = False,
                 black_list: str = None,
-                max_token_length: int = 25) -> None:
+                max_token_length: int = 25,
+                remove_single_letter_token: bool = False) -> None:
         self._do_stem = do_stem
-        self._version = "0.0.4"
+        self._version = "0.0.5"
         self._char_mapping = {
             "e": "е",
             "ё": "е",
@@ -30,7 +31,8 @@ class Preprocessor:
         self._en_stemmer = EnglishStemmer()
         self._max_token_length = max_token_length
         self._remove_stop_words = remove_stop_words
-        self._special_symbols = string.punctuation + "-"
+        self._special_symbols = string.punctuation + "-–"
+        self._remove_single_letter_token= remove_single_letter_token
         self._stopwords = set(nltk.corpus.stopwords.words(["russian", "english"]))
 
     def _is_ru(self, text: str) -> bool:
@@ -68,6 +70,9 @@ class Preprocessor:
 
         if self._black_list:
             tokens = [token for token in tokens if not re.search(self._black_list, token)]
+
+        if self._remove_single_letter_token:
+            tokens = [token for token in tokens if len(token) > 1]
 
         text = " ".join(tokens)
 
