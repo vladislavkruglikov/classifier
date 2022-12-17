@@ -26,4 +26,6 @@ class Voter:
         results = [self._vote(text) for text in tqdm(df.text)]
         ranks = [result[1] for result in results]
         categories = [result[0] for result in results]
-        return pd.DataFrame({"text": df.text, "rank": ranks, "category": categories})
+        df["category_predicted"] = categories
+        df["category_predicted_rank"] = ranks
+        return df
