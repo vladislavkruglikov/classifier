@@ -1,5 +1,8 @@
 SEED = 0
 
+RU_CHARS_LOWER = set("абвгдеёжзийклмнопрстуфхцчшщъыьэюя")
+EN_CHARS_LOWER = set("abcdefghijklmnopqrstuvwxyz")
+
 RU_CHAR_TO_AUGMENTED_CHARS = {
     "а": ["а", "a"],
     "и": ["и", "u"],
