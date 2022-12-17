@@ -11,9 +11,13 @@ nltk.download('stopwords')
 
 
 class Preprocessor:
-    def __init__(self, do_stem: bool = False, remove_stop_words: bool = False, black_list: str = None) -> None:
+    def __init__(self, 
+                do_stem: bool = False,
+                remove_stop_words: bool = False,
+                black_list: str = None,
+                max_token_length: int = 25) -> None:
         self._do_stem = do_stem
-        self._version = "0.0.3"
+        self._version = "0.0.4"
         self._char_mapping = {
             "e": "е",
             "ё": "е",
@@ -24,6 +28,7 @@ class Preprocessor:
         self._black_list = black_list
         self._ru_stemmer = RussianStemmer()
         self._en_stemmer = EnglishStemmer()
+        self._max_token_length = max_token_length
         self._remove_stop_words = remove_stop_words
         self._special_symbols = string.punctuation + "-"
         self._stopwords = set(nltk.corpus.stopwords.words(["russian", "english"]))
@@ -58,6 +63,8 @@ class Preprocessor:
 
         if self._do_stem:
             tokens = [self._stem(token) for token in tokens]
+
+        tokens = [token for token in tokens if len(token) <= self._max_token_length]
 
         if self._black_list:
             tokens = [token for token in tokens if not re.search(self._black_list, token)]
